@@ -22,7 +22,7 @@ Follow this by changing your python settings in cloud9
 
 Then you'll need to create a custom runner because Cloud9 hasn't setup anything allowing you to do this automatically which stinks
 
-4. mkdir ~/workspace/.c9/runners && cp ~/workspace/cloud9/CustomDjango.run ~/workspace/.c9.runners
+4. mkdir ~/workspace/.c9/runners && cp ~/workspace/cloud9/CustomDjango.run ~/workspace/.c9/runners
 
 Finally you'll set this as your primary runner
 
