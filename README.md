@@ -18,12 +18,19 @@ run the following commands from the command line.
 
 Follow this by changing your python settings in cloud9
 
-Run -> Run Configurations -> Manage -> Python Support -> Python Version -> Python 3
+3. Run -> Run Configurations -> Manage -> Python Support -> Python Version -> Python 3
 
-Then run
+Then you'll need to create a custom runner because Cloud9 hasn't setup anything allowing you to do this automatically which stinks
 
-sudo mv /usr/bin/python /usr/bin/python2
-sudo ln -s /usr/bin/python3 /usr/bin/python
+4. mkdir ~/workspace/.c9/runners && cp ~/workspace/cloud9/CustomDjango.run ~/workspace/.c9.runners
+
+Finally you'll set this as your primary runner
+
+5. Click Run Project which should try to run django and fail
+
+6. In the "Django - Stopped" tab at the bottom of the editor click on Runner: Django on the right hand side and select "CustomDjango"
+
+Should be good to go at this point.
 
 At this point you should be good to clone in the git content
  
