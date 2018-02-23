@@ -26,7 +26,8 @@ SECRET_KEY = '(t(n1fuf84hwa2@#_wjtz^*3=a!dd=hpd@v(s-49vh9btv3z1$'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "djangoqdec-thisismetroid.c9users.io"
+    "djangoqdec-thisismetroid.c9users.io",
+    "temploy-quinton3oli.c9users.io"
 ]
 
 
