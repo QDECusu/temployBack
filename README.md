@@ -30,8 +30,6 @@ Finally you'll set this as your primary runner
 
 6. In the "Django - Stopped" tab at the bottom of the editor click on Runner: Django on the right hand side and select "CustomDjango"
 
+7. You'll need to modify your ~/TemployProj/setting.py file and change the allowed hosts to include your cloud9 url.
+
 Should be good to go at this point.
-
-At this point you should be good to clone in the git content with:
-
-git clone https://github.com/QDECusu/temployBack.git
