@@ -32,5 +32,6 @@ Finally you'll set this as your primary runner
 
 Should be good to go at this point.
 
-At this point you should be good to clone in the git content
- 
+At this point you should be good to clone in the git content with:
+
+git clone https://github.com/QDECusu/temployBack.git
