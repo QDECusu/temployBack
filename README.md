@@ -22,8 +22,10 @@ Run -> Run Configurations -> Manage -> Python Support -> Python Version -> Pytho
 
 Then run
 
-sudo mv /usr/bin/python /usr/bin/python2
-sudo ln -s /usr/bin/python3 /usr/bin/python
+1. sudo mv /usr/bin/python /usr/bin/python2
 
-At this point you should be good to clone in the git content
- 
+2. sudo ln -s /usr/bin/python3 /usr/bin/python
+
+At this point you should be good to clone in the git content with:
+
+git clone https://github.com/QDECusu/temployBack.git
