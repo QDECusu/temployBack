@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "djangoqdec-thisismetroid.c9users.io",
-    "temploy-quinton3oli.c9users.io"
+    "temploy-quinton3oli.c9users.io",
+    "https://c9.io/ineedacookie"
 ]
 
 
