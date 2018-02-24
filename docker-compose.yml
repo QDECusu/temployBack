@@ -4,9 +4,14 @@ services:
   db:
     image: postgres
   web:
-    build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    container_name: temploy-backend
+    build: ./
+    command: python3 -u manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+    volumes:
+      - ./:/var/www/
+    environment:
+      - PYTHONUNBUFFERED=0
     depends_on:
       - db

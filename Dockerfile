@@ -1,5 +1,5 @@
 FROM python:3
-WORKDIR /home/chris/Dropbox/Classes/Computer Science/SoftwareEngineering/temployBack
+WORKDIR /var/www
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
+COPY . /var/www

@@ -28,7 +28,11 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "djangoqdec-thisismetroid.c9users.io",
     "temploy-quinton3oli.c9users.io",
+<<<<<<< HEAD
     "https://c9.io/ineedacookie"
+=======
+    "localhost"
+>>>>>>> d6956431f8d15b63f7ca0a987f9dc0486d4e27b3
 ]
 
 
@@ -41,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'temploybackend',
 ]
 
 MIDDLEWARE = [
