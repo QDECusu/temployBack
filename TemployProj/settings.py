@@ -27,14 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "djangoqdec-thisismetroid.c9users.io",
-    "temploy-quinton3oli.c9users.io"
+    "temploy-quinton3oli.c9users.io",
+    "localhost"
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'temploybackend.apps.TemploybackendConfig',
+    'temploybackend',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
