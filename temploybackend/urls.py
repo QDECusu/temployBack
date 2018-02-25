@@ -17,4 +17,6 @@ urlpatterns = [
 	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('home/', views.Home.as_view(), name='home'),
     path('login/', views.Login.as_view(), name='login'),
+    path('getUserJson/', views.TestSimpleUserJson.as_view(), name='getUserJson'),
+	path('getUserJsonAuth/', views.TestSimpleUserJsonAuth.as_view(), name='getUserJsonAuth')
 ]

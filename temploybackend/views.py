@@ -28,8 +28,6 @@ class TestUserViewNoAuth(viewsets.ModelViewSet):
 	"""
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserSerializer
-	# def post(self, request, *args, **kwargs):
-	# 	return HttpResponse("The home route works")
 
 class TestAuth(viewsets.ModelViewSet):
 	"""
@@ -40,8 +38,52 @@ class TestAuth(viewsets.ModelViewSet):
 
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserSerializer
-	# def post(self, request, *args, **kwargs):
-	# 	return HttpResponse("The home route works")
+
+class TestSimpleUserJson(views.APIView):
+	"""
+	API endpoint that allows a user to be viewed without authentication, and outputs the first user
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel
+	"""
+
+	def get(self, request, *args, **kwargs):
+		user = User.objects.filter(id=1).first()
+		jData = {
+			'id': int(user.id),
+			'username': str(user.username),
+			'email': str(user.email),
+			'Group': str(user.groups)
+		}
+
+		return HttpResponse(
+			json.dumps(jData),
+			status=200,
+			content_type="application/json"
+		)
+
+class TestSimpleUserJsonAuth(views.APIView):
+	"""
+	API endpoint that allows a user to be viewed with authentication, and outputs the authed user
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+
+	def post(self, request, *args, **kwargs):
+		user = request.user
+		jData = {
+			'id': int(user.id),
+			'username': str(user.username),
+			'email': str(user.email),
+			'Group': str(user.groups)
+		}
+
+		return HttpResponse(
+			json.dumps(jData),
+			status=200,
+			content_type="application/json"
+		)
 
 class Login(views.APIView):
 
