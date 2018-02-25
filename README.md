@@ -14,7 +14,7 @@ run the following commands from the command line.
 
 1. sudo pip3 install --upgrade pip
 
-2. sudo pip3 install --upgrade django
+2. sudo pip3 install --upgrade django pyjwt djangorestframework
 
 Follow this by changing your python settings in cloud9
 
