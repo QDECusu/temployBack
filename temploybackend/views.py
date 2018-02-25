@@ -6,8 +6,16 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 
-def home(request):
-	return HttpResponse("The home route works")
+#For Authenticating
+from .auth import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+class Home(views.APIView):
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+
+	def post(self, request, *args, **kwargs):
+		return HttpResponse("The home route works")
 
 class Login(views.APIView):
 

@@ -1,8 +1,8 @@
 from TemployProj.urls import path
-
-from . import views
+from django.conf.urls import url
+from . import views, auth
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('login/', views.login, name='login'),
+    path('', views.Home.as_view(), name='home'),
+    path('login/', views.Login.as_view(), name='login'),
 ]
