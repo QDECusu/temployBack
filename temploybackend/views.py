@@ -10,12 +10,38 @@ from django.contrib.auth.hashers import check_password
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+#For django rest framework (+ serializers)
+from django.contrib.auth.models import User, Group
+from rest_framework import viewsets
+from .serializers import UserSerializer, GroupSerializer
+
 class Home(views.APIView):
+
+	def get(self, request):
+		return HttpResponse("The home route works")
+
+class TestUserViewNoAuth(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows a user to be viewed without authentication
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel
+	"""
+	queryset = User.objects.all().order_by('-date_joined')
+	serializer_class = UserSerializer
+	# def post(self, request, *args, **kwargs):
+	# 	return HttpResponse("The home route works")
+
+class TestAuth(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows a user to be viewed with authentication
+	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 
-	def post(self, request, *args, **kwargs):
-		return HttpResponse("The home route works")
+	queryset = User.objects.all().order_by('-date_joined')
+	serializer_class = UserSerializer
+	# def post(self, request, *args, **kwargs):
+	# 	return HttpResponse("The home route works")
 
 class Login(views.APIView):
 
