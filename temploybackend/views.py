@@ -32,6 +32,11 @@ class TestUserViewNoAuth(viewsets.ModelViewSet):
 class TestAuth(viewsets.ModelViewSet):
 	"""
 	API endpoint that allows a user to be viewed with authentication
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel (If desired, not nessesarily required)
+	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
+	key = Authorization
+	data = Token with your JWT from the login
 	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
@@ -65,7 +70,10 @@ class TestSimpleUserJsonAuth(views.APIView):
 	"""
 	API endpoint that allows a user to be viewed with authentication, and outputs the authed user
 	1. Create a Superuser using the manage.py
-	2. Create a User from the admin panel
+	2. Create a User from the admin panel (If desired, not nessesarily required)
+	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
+	key = Authorization
+	data = Token with your JWT from the login
 	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
