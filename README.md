@@ -33,3 +33,22 @@ Finally you'll set this as your primary runner
 7. You'll need to modify your ~/TemployProj/setting.py file and change the allowed hosts to include your cloud9 url.
 
 Should be good to go at this point.
+
+Steps for Docker (Linux/Mac only)
+
+1. Install Docker CE
+	- Go to https://store.docker.com/search?type=edition&offering=community and find your distribution
+	- Follow the steps and install Docker CE
+
+2. Install docker-compose
+	- Go to https://docs.docker.com/compose/install/ and follow the instructions for your distribution/operating system
+
+3. git clone the temployBack repo into a folder (doesn't really matter where)
+
+4. With sudo permissions, run docker-compose build from within the folder
+
+5. After it's done building, run docker-compose up -d from within the folder
+
+6. Connect to localhost:8000 to view the API
+
+(Use postman or a similar tool to connect to the API and view results)
