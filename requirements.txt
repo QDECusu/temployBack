@@ -1,4 +1,4 @@
 django
 pyjwt
 djangorestframework
-corsheaders
+django-cors-headers
