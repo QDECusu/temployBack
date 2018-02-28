@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'temploybackend',
 ]
@@ -49,12 +50,23 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+    'localhost:8080',
+    'localhost:8000',
+    'djangoqdec-thisismetroid.c9users.io:8080',
+    'djangoqdec-thisismetroid.c9users.io:3000',
+    'temploy-quinton3oli.c9users.io:8080',
+    'temploy-quinton3oli.c9users.io:3000'
+)
 
 ROOT_URLCONF = 'TemployProj.urls'
 
