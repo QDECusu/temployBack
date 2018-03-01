@@ -3,6 +3,7 @@ from rest_framework import status, exceptions
 from django.http import HttpResponse
 from rest_framework.authentication import get_authorization_header, BaseAuthentication
 from django.contrib.auth.models import User
+from django.conf import settings
 import jwt
 import json
 
@@ -40,7 +41,7 @@ class TokenAuthentication(BaseAuthentication):
 	#Validates JWT
 	def authenticate_credentials(self, token):
 		model = self.get_model()
-		payload = jwt.decode(token, "SECRET_KEY")
+		payload = jwt.decode(token, settings.SECRET_KEY)
 		email = payload['email']
 		userid = payload['id']
 		msg = {'Error': "Token mismatch",'status' :"401"}
