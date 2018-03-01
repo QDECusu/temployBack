@@ -1,6 +1,7 @@
 from TemployProj.urls import path
 from django.conf.urls import url
 from . import views, auth
+from django.conf import settings
 
 #django rest framework stuff
 from django.conf.urls import url, include

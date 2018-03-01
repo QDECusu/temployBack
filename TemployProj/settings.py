@@ -29,7 +29,8 @@ ALLOWED_HOSTS = [
     "djangoqdec-thisismetroid.c9users.io",
     "temploy-quinton3oli.c9users.io",
     "https://c9.io/ineedacookie",
-    "localhost"
+    "localhost",
+    "192.168.99.100"
 ]
 
 

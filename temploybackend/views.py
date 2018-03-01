@@ -5,6 +5,7 @@ from rest_framework import views
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
+from django.conf import settings
 
 #For Authenticating
 from .auth import TokenAuthentication
@@ -115,7 +116,7 @@ class Login(views.APIView):
 				'id': user.id,
 				'email': user.email,
 			}
-			jwt_token = {'token': jwt.encode(payload, "SECRET_KEY").decode("utf-8") }
+			jwt_token = {'token': jwt.encode(payload, settings.SECRET_KEY).decode("utf-8") }
 
 			return HttpResponse(json.dumps(jwt_token))
 
