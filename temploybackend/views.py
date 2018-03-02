@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.conf import settings
+from .toDict import to_dict
 
 #For Authenticating
 from .auth import TokenAuthentication
@@ -15,7 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer
+from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer
+from .models import JobListing, Profile
 
 class Home(views.APIView):
 
@@ -30,6 +32,34 @@ class TestUserViewNoAuth(viewsets.ModelViewSet):
 	"""
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserSerializer
+
+class getPosts(views.APIView):
+	"""
+	API endpoint to get posts assigned to user
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+
+	def get(self, request):
+		jobList = JobListing.objects.filter(user=request.user.id)
+		jData = []
+		for job in jobList:
+			jData.append({
+				'user': job.user.username,
+				'company_name': job.company_name,
+				'job_position': job.job_position,
+				'job_phone': job.job_phone,
+				'job_email': job.job_email,
+				'job_description': job.job_description,
+				'job_schedule': job.job_schedule,
+				'job_post_date': str(job.job_post_date)
+			})
+
+		return HttpResponse(
+			json.dumps(jData),
+			status=200,
+			content_type="application/json"
+		)
 
 class TestAuth(viewsets.ModelViewSet):
 	"""
