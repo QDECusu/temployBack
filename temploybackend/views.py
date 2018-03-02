@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer
+from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer, CreateUserSerializer
 from .models import JobListing, Profile
 
 class Home(views.APIView):
@@ -167,4 +167,4 @@ class CreateUserView(generics.CreateAPIView):
 	API endpoint that allows a user to be created
 	"""
 	#queryset = ''
-	serializer_class = UserSerializer
+	serializer_class = CreateUserSerializer

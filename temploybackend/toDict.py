@@ -1,4 +1,7 @@
 from django.db.models.fields.related import ManyToManyField
+from django.contrib.auth.models import User
+#from django.contrib.auth.hashers import check_password
+#from rest_framework.response import Response
 
 def to_dict(instance):
     opts = instance._meta
