@@ -4,6 +4,7 @@ from .models import JobListing, Profile
 from django.contrib.auth.hashers import check_password
 from django.conf import settings
 import jwt, json
+from rest_framework.fields import CurrentUserDefault
 from .toDict import *
 
 class CreateUserSerializer(serializers.HyperlinkedModelSerializer):
@@ -42,7 +43,17 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 		model = Group
 		fields = ('url', 'name')
 
-class JobPostingSerializer(serializers.HyperlinkedModelSerializer):
+class JobPostingSerializer(serializers.ModelSerializer):
+	user = serializers.PrimaryKeyRelatedField(
+		default=serializers.CurrentUserDefault(),
+		read_only=True
+	)
+
 	class Meta:
 		model = JobListing
-		fields = ('user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule', 'job_post_date')
+		fields = ('user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
+
+	def create(self, validated_data):
+		post = super().create(validated_data)
+		post.save()
+		return post

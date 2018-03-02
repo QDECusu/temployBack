@@ -11,6 +11,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'userView', views.TestUserViewNoAuth)
 router.register(r'userViewAuth', views.TestAuth)
+#router.register(r'createPost', views.CreatePostView)
 #router.register(r'getPosts', views.getPosts, base_name='post-list')
 ###########################
 
@@ -22,5 +23,6 @@ urlpatterns = [
     path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
 	path('getUserDetail/', views.TestSimpleUserJsonAuth.as_view(), name='getUserDetail'),
 	path('getPosts/', views.getPosts.as_view(), name='getPosts'),
-	url(r'signup/', views.CreateUserView.as_view(), name='signup')
+	url(r'signup/', views.CreateUserView.as_view(), name='signup'),
+	url(r'createPost/', views.CreatePostView.as_view(), name='createPost')
 ]

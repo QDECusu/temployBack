@@ -170,3 +170,12 @@ class CreateUserView(generics.CreateAPIView):
 	"""
 	#queryset = ''
 	serializer_class = CreateUserSerializer
+
+class CreatePostView(generics.CreateAPIView):
+	"""
+	API endpoint that allows a Job Post to be created
+	"""
+	#queryset = ''
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+	serializer_class = JobPostingSerializer
