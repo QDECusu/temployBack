@@ -30,7 +30,9 @@ ALLOWED_HOSTS = [
     "temploy-quinton3oli.c9users.io",
     "https://c9.io/ineedacookie",
     "localhost",
-    "192.168.99.100"
+    "192.168.99.100",
+    "172.16.238.11",
+    "temploy-back.localhost"
 ]
 
 
@@ -66,7 +68,12 @@ CORS_ORIGIN_WHITELIST = (
     'djangoqdec-thisismetroid.c9users.io:8080',
     'djangoqdec-thisismetroid.c9users.io:3000',
     'temploy-quinton3oli.c9users.io:8080',
-    'temploy-quinton3oli.c9users.io:3000'
+    'temploy-quinton3oli.c9users.io:3000',
+    '172.16.238.11:3000',
+    '172.16.238.11:8000',
+    '172.16.238.11:8080',
+    'temploy.localhost',
+    'temploy-back.localhost'
 )
 
 ROOT_URLCONF = 'TemployProj.urls'
