@@ -18,6 +18,8 @@ services:
       - ./:/var/www/
     depends_on:
       - "nginx-proxy"
+    ports:
+      - "8000:8000"
     environment:
       - VIRTUAL_PORT=8000
       - PYTHONUNBUFFERED=0
