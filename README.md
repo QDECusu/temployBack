@@ -49,6 +49,8 @@ Steps for Docker (Linux/Mac only)
 
 5. After it's done building, run docker-compose up -d from within the folder
 
-6. Connect to localhost:8000 to view the API
+6. Connect to temploy-back.localhost to view the API
+
+If you are having trouble connecting add temploy.localhost to your hosts file, in linux you can do this by editing your /etc/hosts file and adding 127.0.0.1 (press tab) temploy.localhost, and another line with 127.0.0.1 (press tab) temploy-back.localhost
 
 (Use postman or a similar tool to connect to the API and view results)
