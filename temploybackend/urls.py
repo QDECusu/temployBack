@@ -1,6 +1,6 @@
 from TemployProj.urls import path
 from django.conf.urls import url
-from . import views, auth
+from . import views, auth, JobPosts
 
 
 #django rest framework stuff
@@ -11,8 +11,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'userView', views.TestUserViewNoAuth)
 router.register(r'userViewAuth', views.TestAuth)
-#router.register(r'createPost', views.CreatePostView)
-#router.register(r'getPosts', views.getPosts, base_name='post-list')
+router.register(r'JobPosts', JobPosts.jobPostViewSet)
 ###########################
 
 urlpatterns = [
@@ -22,7 +21,6 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
 	path('getUserDetail/', views.TestSimpleUserJsonAuth.as_view(), name='getUserDetail'),
-	path('getPosts/', views.getPosts.as_view(), name='getPosts'),
+	path('listUserPosts/', JobPosts.getUserPostView.as_view(), name='listUserPosts'),
 	url(r'signup/', views.CreateUserView.as_view(), name='signup'),
-	url(r'createPost/', views.CreatePostView.as_view(), name='createPost')
 ]

@@ -43,7 +43,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 		model = Group
 		fields = ('url', 'name')
 
-class JobPostingSerializer(serializers.ModelSerializer):
+class JobPostingSerializer(serializers.HyperlinkedModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
 		default=serializers.CurrentUserDefault(),
 		read_only=True
@@ -51,7 +51,7 @@ class JobPostingSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = JobListing
-		fields = ('user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
+		fields = ('url', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
 
 	def create(self, validated_data):
 		post = super().create(validated_data)

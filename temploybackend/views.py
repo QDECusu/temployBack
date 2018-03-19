@@ -33,34 +33,6 @@ class TestUserViewNoAuth(viewsets.ModelViewSet):
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserSerializer
 
-class getPosts(views.APIView):
-	"""
-	API endpoint to get posts assigned to user
-	"""
-	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
-
-	def get(self, request):
-		jobList = JobListing.objects.filter(user=request.user.id)
-		jData = []
-		for job in jobList:
-			jData.append({
-				'user': job.user.username,
-				'company_name': job.company_name,
-				'job_position': job.job_position,
-				'job_phone': job.job_phone,
-				'job_email': job.job_email,
-				'job_description': job.job_description,
-				'job_schedule': job.job_schedule,
-				'job_post_date': str(job.job_post_date)
-			})
-
-		return HttpResponse(
-			json.dumps(jData),
-			status=200,
-			content_type="application/json"
-		)
-
 class TestAuth(viewsets.ModelViewSet):
 	"""
 	API endpoint that allows a user to be viewed with authentication
@@ -170,12 +142,3 @@ class CreateUserView(generics.CreateAPIView):
 	"""
 	#queryset = ''
 	serializer_class = CreateUserSerializer
-
-class CreatePostView(generics.CreateAPIView):
-	"""
-	API endpoint that allows a Job Post to be created
-	"""
-	#queryset = ''
-	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
-	serializer_class = JobPostingSerializer
