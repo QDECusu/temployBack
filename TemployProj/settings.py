@@ -27,15 +27,15 @@ DEBUG = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ALLOWED_HOSTS = [
-    "djangoqdec-thisismetroid.c9users.io",
-    "temploy-quinton3oli.c9users.io",
-    "https://c9.io/ineedacookie",
-    "localhost",
-    "192.168.99.100",
-    "172.16.238.11",
-    "temploy-back.localhost"
-]
+# ALLOWED_HOSTS = [
+#     "djangoqdec-thisismetroid.c9users.io",
+#     "temploy-quinton3oli.c9users.io",
+#     "https://c9.io/ineedacookie",
+#     "localhost",
+#     "192.168.99.100",
+#     "172.16.238.11",
+#     "temploy-back.localhost"
+# ]
 
 
 # Application definition
