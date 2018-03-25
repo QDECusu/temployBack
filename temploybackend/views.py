@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import jwt, json
 from rest_framework import views
 from rest_framework.response import Response
+from rest_framework import permissions
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.conf import settings
@@ -16,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer, CreateUserSerializer
+from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer, CreateUserSerializer, ProfileSerializer
 from .models import JobListing, Profile
 
 class Home(views.APIView):
@@ -142,3 +143,21 @@ class CreateUserView(generics.CreateAPIView):
 	"""
 	#queryset = ''
 	serializer_class = CreateUserSerializer
+
+class ProfileView(viewsets.ModelViewSet):
+	"""
+	API endpoint that allows a user to be viewed with authentication
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel (If desired, not nessesarily required)
+	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
+	key = Authorization
+	data = Token with your JWT from the login
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+	serializer_class = ProfileSerializer
+
+	def get_queryset(self):
+		if self.request.method in permissions.SAFE_METHODS:
+			return Profile.objects.all()
+		return Profile.objects.filter(user=self.request.user)

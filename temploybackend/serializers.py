@@ -21,7 +21,7 @@ class CreateUserSerializer(serializers.HyperlinkedModelSerializer):
 		user.save()
 		return user
 
-	def get_token(self, instance):	
+	def get_token(self, instance):
 		user = User.objects.get(username=instance.username)	
 		payload = {
 			'id': user.id,
@@ -37,6 +37,21 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		model = User
 		fields = ('url', 'username', 'email', 'password', 'first_name', 'last_name')
 		extra_kwargs = {'password': {'write_only': True}}
+
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+	user = UserSerializer()
+
+	class Meta:
+		model = Profile
+		depth = 1
+		fields = ('user', 'zipcode', 'rating', 'skills', 'short_description')
+
+	def update(self, instance, validated_data):
+		user_data = validated_data.pop('user', {})
+		# import ipdb; ipdb.set_trace()
+		User.objects.filter(id=instance.user.id).update(**user_data)
+		instance = Profile.objects.get(id=instance.id)
+		return super(ProfileSerializer, self).update(instance, validated_data)
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:

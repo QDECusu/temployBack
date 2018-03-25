@@ -1,5 +1,6 @@
 from TemployProj.urls import path
 from django.conf.urls import url
+from rest_framework.urlpatterns import format_suffix_patterns
 from . import views, auth, JobPosts
 
 
@@ -12,6 +13,7 @@ router = routers.DefaultRouter()
 router.register(r'userView', views.TestUserViewNoAuth)
 router.register(r'userViewAuth', views.TestAuth)
 router.register(r'JobPosts', JobPosts.jobPostViewSet)
+router.register(r'Profile', views.ProfileView, base_name="Profile")
 ###########################
 
 urlpatterns = [
