@@ -161,3 +161,32 @@ class ProfileView(viewsets.ModelViewSet):
 		if self.request.method in permissions.SAFE_METHODS:
 			return Profile.objects.all()
 		return Profile.objects.filter(user=self.request.user)
+
+class UserProfileView(views.APIView):
+	"""
+	API Endpoint that allows a user to view their own profile information
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+
+	def get(self, request, *args, **kwargs):
+		user = request.user
+		profile = Profile.objects.filter(user=user.id).first()
+		jData = {
+			'id': int(user.id),
+			'username': str(user.username),
+			'first_name': str(user.first_name),
+			'last_name': str(user.last_name),
+			'email': str(user.email),
+			'Group': str(user.groups),
+			'zipcode': profile.zipcode,
+			'rating':profile.rating,
+			'skills': profile.skills,
+			'short_description': profile.short_description
+		}
+
+		return HttpResponse(
+			json.dumps(jData),
+			status=200,
+			content_type="application/json"
+		)

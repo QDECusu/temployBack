@@ -24,5 +24,6 @@ urlpatterns = [
     path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
 	path('getUserDetail/', views.TestSimpleUserJsonAuth.as_view(), name='getUserDetail'),
 	path('listUserPosts/', JobPosts.getUserPostView.as_view(), name='listUserPosts'),
+	path('profileDetail/', views.UserProfileView.as_view(), name='profileDetail'),
 	url(r'signup/', views.CreateUserView.as_view(), name='signup'),
 ]

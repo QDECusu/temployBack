@@ -20,3 +20,4 @@ class Profile(models.Model):
 	rating = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
 	skills = models.TextField(null=True)
 	short_description = models.TextField(null=True)
+	
