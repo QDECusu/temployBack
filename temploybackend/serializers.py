@@ -19,6 +19,7 @@ class CreateUserSerializer(serializers.HyperlinkedModelSerializer):
 		user = super().create(validated_data)
 		user.set_password(user.password)
 		user.save()
+		profile = Profile.objects.create(user=user)
 		return user
 
 	def get_token(self, instance):

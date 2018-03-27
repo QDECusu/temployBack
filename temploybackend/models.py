@@ -16,8 +16,8 @@ class JobListing(models.Model):
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	zipcode = models.IntegerField(validators=[MinValueValidator(501), MaxValueValidator(99950)])
-	rating = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
-	skills = models.TextField(null=True)
-	short_description = models.TextField(null=True)
+	zipcode = models.IntegerField(validators=[MinValueValidator(501), MaxValueValidator(99950)], default=00000)
+	rating = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)], default=0)
+	skills = models.TextField(blank=True)
+	short_description = models.TextField(blank=True)
 	
