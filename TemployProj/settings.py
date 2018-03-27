@@ -26,18 +26,16 @@ SECRET_KEY = '(t(n1fuf84hwa2@#_wjtz^*3=a!dd=hpd@v(s-49vh9btv3z1$'
 DEBUG = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 
 ALLOWED_HOSTS = [
-    "djangoqdec-thisismetroid.c9users.io",
-    "temploy-quinton3oli.c9users.io",
-    "https://c9.io/ineedacookie",
-    "localhost",
-    "192.168.99.100",
-    "172.16.238.11",
-    "temploy-back.localhost",
-    "144.39.160.212"
+    '*',
+    # "localhost",
+    # "192.168.99.100",
+    # "172.16.238.11",
+    # "temploy-back.localhost",
+    # "144.39.160.212"
 ]
-
 
 # Application definition
 
@@ -61,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 CORS_ORIGIN_WHITELIST = (
