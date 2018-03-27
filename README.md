@@ -28,3 +28,34 @@ Steps for Docker (Linux/Mac only)
 If you are having trouble connecting add temploy.localhost to your hosts file, in linux you can do this by editing your /etc/hosts file and adding 127.0.0.1 (press tab) temploy.localhost, and another line with 127.0.0.1 (press tab) temploy-back.localhost
 
 (Use postman or a similar tool to connect to the API and view results)
+
+TROUBLESHOOTING
+
+If you're havinng problems with the backend API, there are a few commands you can use to attempt to troubleshoot
+
+1. If you're having issues the number one cause of issues is migrations problems. Run the following to attempt to resolve that
+
+    <pre>
+        $ sudo docker exec -itt temploy-backend bash
+        $ python3 manage.py makemigrations
+        $ python3 manage.py migrate
+    </pre>
+
+    If this does not fix your issue then press <CTRL>-<D> to exit out of the container
+
+2. Checking logs. Probably the most important thing to try to figure out what is going wrong
+
+    <pre>
+        $ sudo docker logs -f temploy-backend
+    </pre>
+
+   This will show you the error logs for the docker container. It should provide you with enough information to see exactly what is going wrong
+
+3. Rebuilding container. Do this if nothing else has helped you at all, but don't expect it to fix anything.
+
+    <pre>
+        $ cd to your temploy backend directory
+        $ sudo docker-compose down
+        $ sudo docker-compose build
+        $ sudo docker-compose up -d
+    </pre>
