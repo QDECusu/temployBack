@@ -30,11 +30,11 @@ CORS_ALLOW_CREDENTIALS = False
 
 ALLOWED_HOSTS = [
     '*',
-    # "localhost",
-    # "192.168.99.100",
-    # "172.16.238.11",
-    # "temploy-back.localhost",
-    # "144.39.160.212"
+    "localhost",
+    "192.168.99.100",
+    "172.16.238.11",
+    "temploy-back.localhost",
+    "144.39.160.212"
 ]
 
 # Application definition
