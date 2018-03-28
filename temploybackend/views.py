@@ -173,7 +173,7 @@ class UserProfileView(views.APIView):
 		user = request.user
 		profile = Profile.objects.filter(user=user.id).first()
 		jData = {
-			'id': int(user.id),
+			'id': int(profile.id),
 			'username': str(user.username),
 			'first_name': str(user.first_name),
 			'last_name': str(user.last_name),
