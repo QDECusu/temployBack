@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import * 
+from .validators import is_json
 import datetime
 
 # Create your models here.
@@ -24,6 +25,6 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	zipcode = models.IntegerField(validators=[MinValueValidator(501), MaxValueValidator(99950)], default=00000)
 	rating = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)], default=0)
-	skills = models.TextField(blank=True, default = 'skills')
+	skills = models.TextField(validators=[is_json], blank=True, default = 'skills')
 	short_description = models.TextField(blank=True, default = 'short description')
 	
