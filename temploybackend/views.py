@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer, CreateUserSerializer, ProfileSerializer
+from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer
 from .models import JobListing, Profile
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 

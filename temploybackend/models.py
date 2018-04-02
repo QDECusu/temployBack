@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import * 
+from .validators import is_json
 import datetime
 
 # Create your models here.
@@ -23,6 +24,12 @@ class AvailabilityListing(models.Model):
 	job_description = models.TextField()
 	job_schedule = models.CharField(max_length=500)
 	job_post_date = models.DateField(auto_now_add=True)
+
+class AvailabilityListing(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	description = models.TextField(validators=[MinLengthValidator(10)])
+	schedule = models.CharField(max_length=500)
+	post_date = models.DateField(auto_now_add=True)
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
