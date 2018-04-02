@@ -8,11 +8,17 @@ class JobListing(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	company_name = models.CharField(max_length=80)
 	job_position = models.CharField(max_length=50)
-	job_phone = models.CharField(max_length=10)
+	job_phone = models.CharField(max_length=10, blank=True)
 	job_email = models.EmailField()
 	job_description = models.TextField()
 	job_schedule = models.CharField(max_length=500)
 	job_post_date = models.DateField(auto_now_add=True)
+
+class AvailabilityListing(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	description = models.TextField(validators=[MinLengthValidator(10)])
+	schedule = models.CharField(max_length=500)
+	post_date = models.DateField(auto_now_add=True)
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)

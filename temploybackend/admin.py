@@ -3,4 +3,5 @@ from .models import *
 
 # Register your models here.
 admin.site.register(JobListing)
+admin.site.register(AvailabilityListing)
 admin.site.register(Profile)

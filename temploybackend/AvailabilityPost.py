@@ -1,12 +1,11 @@
 from django.http import HttpResponse
+import json
 #For django rest framework (+ serializers)
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, mixins, generics, views
-from rest_framework.generics import CreateAPIView
+from rest_framework import viewsets, views
 from rest_framework import permissions
-from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer
-from .models import JobListing, Profile
-import jwt, json
+from .serializers import UserSerializer, AvailabilityPostSerializer
+from .models import AvailabilityListing
 #For Authenticating
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -19,7 +18,7 @@ class getUserPostView(views.APIView):
 	permission_classes = (IsAuthenticated,)
 
 	def get(self, request):
-		jobList = JobListing.objects.filter(user=request.user.id)
+		jobList = AvailabilityListing.objects.filter(user=request.user.id)
 		jData = []
 		for job in jobList:
 			jData.append({
@@ -39,13 +38,13 @@ class getUserPostView(views.APIView):
 			content_type="application/json"
 		)
 
-class jobPostViewSet(viewsets.ModelViewSet):
+class availabilityPostViewSet(viewsets.ModelViewSet):
 	"""
 	API endpoint to get posts assigned to user
 	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
-	serializer_class = JobPostSerializer
+	serializer_class = AvailabilityPostSerializer
 
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:

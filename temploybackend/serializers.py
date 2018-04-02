@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import JobListing, Profile
+from .models import JobListing, Profile, AvailabilityListing
 from django.contrib.auth.hashers import check_password
 from django.conf import settings
 import jwt, json
@@ -52,7 +52,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Profile
 		depth = 1
-		fields = ('user', 'zipcode', 'rating', 'skills', 'short_description')
+		fields = ('id', 'user', 'zipcode', 'rating', 'skills', 'short_description')
 
 	def update(self, instance, validated_data):
 		user_data = validated_data.pop('user', {})
@@ -66,15 +66,34 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 		model = Group
 		fields = ('url', 'name')
 
-class JobPostingSerializer(serializers.HyperlinkedModelSerializer):
+class JobPostSerializer(serializers.HyperlinkedModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
 		default=serializers.CurrentUserDefault(),
 		read_only=True
 	)
 
+	url = serializers.HyperlinkedIdentityField(view_name="JobPosts-detail")
+
 	class Meta:
 		model = JobListing
 		fields = ('url', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
+
+	def create(self, validated_data):
+		post = super().create(validated_data)
+		post.save()
+		return post
+
+class AvailabilityPostSerializer(serializers.HyperlinkedModelSerializer):
+	user = serializers.PrimaryKeyRelatedField(
+		default=serializers.CurrentUserDefault(),
+		read_only=True
+	)
+
+	url = serializers.HyperlinkedIdentityField(view_name="AvailabilityPosts-detail")
+
+	class Meta:
+		model = AvailabilityListing
+		fields = ('url', 'user', 'description', 'schedule', 'post_date')
 
 	def create(self, validated_data):
 		post = super().create(validated_data)
