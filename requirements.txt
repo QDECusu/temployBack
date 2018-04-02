@@ -2,3 +2,4 @@ django
 pyjwt
 djangorestframework
 django-cors-headers
+django-rest-multiple-models

@@ -52,7 +52,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Profile
 		depth = 1
-		fields = ('user', 'zipcode', 'rating', 'skills', 'short_description')
+		fields = ('id', 'user', 'zipcode', 'rating', 'skills', 'short_description')
 
 	def update(self, instance, validated_data):
 		user_data = validated_data.pop('user', {})
@@ -67,6 +67,21 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 		fields = ('url', 'name')
 
 class JobPostingSerializer(serializers.HyperlinkedModelSerializer):
+	user = serializers.PrimaryKeyRelatedField(
+		default=serializers.CurrentUserDefault(),
+		read_only=True
+	)
+
+	class Meta:
+		model = JobListing
+		fields = ('url', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
+
+	def create(self, validated_data):
+		post = super().create(validated_data)
+		post.save()
+		return post
+
+class AvailabilityPostSerializer(serializers.HyperlinkedModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
 		default=serializers.CurrentUserDefault(),
 		read_only=True

@@ -19,6 +19,7 @@ from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
 from .serializers import UserSerializer, GroupSerializer, JobPostingSerializer, CreateUserSerializer, ProfileSerializer
 from .models import JobListing, Profile
+from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 class Home(views.APIView):
 
@@ -190,3 +191,61 @@ class UserProfileView(views.APIView):
 			status=200,
 			content_type="application/json"
 		)
+
+# class SearchView(generics.ListAPIView):
+#     """
+#     Will search users, job posts, availability listings*TBA
+#     """
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = (IsAdminUser,)
+
+#     def list(self, request):
+#         # Note the use of `get_queryset()` instead of `self.queryset`
+#         queryset = self.get_queryset()
+#         serializer = UserSerializer(queryset, many=True)
+#         return Response(serializer.data)
+
+#     def get_queryset(self):
+#         result = super(SearchView, self).get_queryset()
+
+#         query = self.request.GET.get('q')
+#         if query:
+#             query_list = query.split()
+#             result = result.filter(
+#                 reduce(operator.and_,
+#                        (Q(title__icontains=q) for q in query_list)) |
+#                 reduce(operator.and_,
+#                        (Q(content__icontains=q) for q in query_list))
+#             )
+
+#         return result
+
+class SearchView(views.APIView):
+        """
+        API endpoint that allows a user to be viewed with authentication, and outputs the authed user
+        1. Create a Superuser using the manage.py
+        2. Create a User from the admin panel (If desired, not nessesarily required)
+        3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
+        key = Authorization
+        data = Token with your JWT from the login
+        """
+        # authentication_classes = (TokenAuthentication,)
+        # permission_classes = (IsAuthenticated,)
+
+        def get(self, request, *args, **kwargs):
+                request = request.query_params['q']
+
+                users = User.objects.filter(username__icontains=request)
+
+                reduce(operator.and_,)
+
+                jData = {
+                        'postData': str(request)
+                }
+
+                return HttpResponse(
+                        json.dumps(jData),
+                        status=200,
+                        content_type="application/json"
+                )

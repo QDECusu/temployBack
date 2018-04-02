@@ -14,6 +14,7 @@ router.register(r'userView', views.TestUserViewNoAuth)
 router.register(r'userViewAuth', views.TestAuth)
 router.register(r'JobPosts', JobPosts.jobPostViewSet)
 router.register(r'Profile', views.ProfileView, base_name="Profile")
+#router.register(r'search', views.SearchView)
 ###########################
 
 urlpatterns = [
@@ -23,6 +24,7 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
 	path('getUserDetail/', views.TestSimpleUserJsonAuth.as_view(), name='getUserDetail'),
+	path('search/', views.SearchView.as_view(), name='search'),
 	path('listUserPosts/', JobPosts.getUserPostView.as_view(), name='listUserPosts'),
 	path('profileDetail/', views.UserProfileView.as_view(), name='profileDetail'),
 	url(r'signup/', views.CreateUserView.as_view(), name='signup'),
