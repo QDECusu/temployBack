@@ -89,17 +89,11 @@ class AvailabilityPostSerializer(serializers.HyperlinkedModelSerializer):
 		read_only=True
 	)
 
-<<<<<<< HEAD
-	class Meta:
-		model = JobListing
-		fields = ('url', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
-=======
 	url = serializers.HyperlinkedIdentityField(view_name="AvailabilityPosts-detail")
 
 	class Meta:
 		model = AvailabilityListing
 		fields = ('url', 'user', 'description', 'schedule', 'post_date')
->>>>>>> master
 
 	def create(self, validated_data):
 		post = super().create(validated_data)

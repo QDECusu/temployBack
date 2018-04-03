@@ -25,13 +25,9 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
 	path('getUserDetail/', views.TestSimpleUserJsonAuth.as_view(), name='getUserDetail'),
-<<<<<<< HEAD
 	path('search/', views.SearchView.as_view(), name='search'),
-	path('listUserPosts/', JobPosts.getUserPostView.as_view(), name='listUserPosts'),
-=======
 	path('listUserJobPosts/', JobPosts.getUserPostView.as_view(), name='listUserJobPosts'),
 	path('listUserAvailabilityPosts/', JobPosts.getUserPostView.as_view(), name='listUserAvailabilityPosts'),	
->>>>>>> master
 	path('profileDetail/', views.UserProfileView.as_view(), name='profileDetail'),
 	url(r'signup/', views.CreateUserView.as_view(), name='signup'),
 ]

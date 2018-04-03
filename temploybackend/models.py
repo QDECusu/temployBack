@@ -10,17 +10,7 @@ class JobListing(models.Model):
 	company_name = models.CharField(max_length=80)
 	job_position = models.CharField(max_length=50)
 	job_phone = models.CharField(max_length=10)
-	job_email = models.EmailField()
-	job_description = models.TextField()
-	job_schedule = models.CharField(max_length=500)
-	job_post_date = models.DateField(auto_now_add=True)
-
-class AvailabilityListing(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	company_name = models.CharField(max_length=80)
-	job_position = models.CharField(max_length=50)
-	job_phone = models.CharField(max_length=10)
-	job_email = models.EmailField()
+	job_email = models.EmailField(validators=[EmailValidator])
 	job_description = models.TextField()
 	job_schedule = models.CharField(max_length=500)
 	job_post_date = models.DateField(auto_now_add=True)

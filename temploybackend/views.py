@@ -2,6 +2,7 @@ from django.http import HttpResponse
 #For login portion
 import jwt, json
 from rest_framework import views
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.contrib.auth.models import User
@@ -17,8 +18,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer
-from .models import JobListing, Profile
+from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer, AvailabilityPostSerializer
+from .models import JobListing, Profile, AvailabilityListing
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 class Home(views.APIView):
@@ -221,31 +222,39 @@ class UserProfileView(views.APIView):
 
 #         return result
 
-class SearchView(views.APIView):
-        """
-        API endpoint that allows a user to be viewed with authentication, and outputs the authed user
-        1. Create a Superuser using the manage.py
-        2. Create a User from the admin panel (If desired, not nessesarily required)
-        3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
-        key = Authorization
-        data = Token with your JWT from the login
-        """
-        # authentication_classes = (TokenAuthentication,)
-        # permission_classes = (IsAuthenticated,)
+class SearchView(ObjectMultipleModelAPIView):
+	"""
+	API endpoint that allows a user to be viewed with authentication, and outputs the authed user
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel (If desired, not nessesarily required)
+	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
+	key = Authorization
+	data = Token with your JWT from the login
+	"""
+	# authentication_classes = (TokenAuthentication,)
+	# permission_classes = (IsAuthenticated,)
 
-        def get(self, request, *args, **kwargs):
-                request = request.query_params['q']
+	querylist = [
+		{'queryset': User.objects.all(), 'serializer_class': UserSerializer},
+		{'queryset': JobListing.objects.all(), 'serializer_class': JobPostSerializer},
+		{'queryset': AvailabilityListing.objects.all(), 'serializer_class': AvailabilityPostSerializer}
+	]
+	filter_backends = {filters.SearchFilter,}
+	search_fields = ('username', 'email', 'password', 'first_name', 'last_name', 'company_name', 'job_position', 'job_email', 'job_description', )
 
-                users = User.objects.filter(username__icontains=request)
+	# def get(self, request, *args, **kwargs):
+	# 	request = request.query_params['q']
 
-                reduce(operator.and_,)
+	# 	users = User.objects.filter(username__icontains=request)
 
-                jData = {
-                        'postData': str(request)
-                }
+	# 	reduce(operator.and_,)
 
-                return HttpResponse(
-                        json.dumps(jData),
-                        status=200,
-                        content_type="application/json"
-                )
+	# 	jData = {
+	# 		'postData': str(request)
+	# 	}
+
+	# 	return HttpResponse(
+	# 		json.dumps(jData),
+	# 		status=200,
+	# 		content_type="application/json"
+	# 	)
