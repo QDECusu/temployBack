@@ -41,7 +41,7 @@ If you're havinng problems with the backend API, there are a few commands you ca
         $ python3 manage.py migrate
     </pre>
 
-    If this does not fix your issue then press <CTRL>-<D> to exit out of the container
+    If this does not fix your issue then press CTRL-D to exit out of the container
 
 2. Checking logs. Probably the most important thing to try to figure out what is going wrong
 
