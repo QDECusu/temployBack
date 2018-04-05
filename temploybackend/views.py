@@ -193,68 +193,46 @@ class UserProfileView(views.APIView):
 			content_type="application/json"
 		)
 
-# class SearchView(generics.ListAPIView):
-#     """
-#     Will search users, job posts, availability listings*TBA
-#     """
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = (IsAdminUser,)
-
-#     def list(self, request):
-#         # Note the use of `get_queryset()` instead of `self.queryset`
-#         queryset = self.get_queryset()
-#         serializer = UserSerializer(queryset, many=True)
-#         return Response(serializer.data)
-
-#     def get_queryset(self):
-#         result = super(SearchView, self).get_queryset()
-
-#         query = self.request.GET.get('q')
-#         if query:
-#             query_list = query.split()
-#             result = result.filter(
-#                 reduce(operator.and_,
-#                        (Q(title__icontains=q) for q in query_list)) |
-#                 reduce(operator.and_,
-#                        (Q(content__icontains=q) for q in query_list))
-#             )
-
-#         return result
-
 class SearchView(ObjectMultipleModelAPIView):
 	"""
-	API endpoint that allows a user to be viewed with authentication, and outputs the authed user
-	1. Create a Superuser using the manage.py
-	2. Create a User from the admin panel (If desired, not nessesarily required)
-	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
-	key = Authorization
-	data = Token with your JWT from the login
+	API endpoint for searching the database for useful information related to users.
 	"""
 	# authentication_classes = (TokenAuthentication,)
 	# permission_classes = (IsAuthenticated,)
 
-	querylist = [
-		{'queryset': User.objects.all(), 'serializer_class': UserSerializer},
-		{'queryset': JobListing.objects.all(), 'serializer_class': JobPostSerializer},
-		{'queryset': AvailabilityListing.objects.all(), 'serializer_class': AvailabilityPostSerializer}
-	]
-	filter_backends = {filters.SearchFilter,}
-	search_fields = ('username', 'email', 'password', 'first_name', 'last_name', 'company_name', 'job_position', 'job_email', 'job_description', )
+	def get_querylist(self):
+		query = self.request.query_params['q']
 
-	# def get(self, request, *args, **kwargs):
-	# 	request = request.query_params['q']
+		querylist = []
 
-	# 	users = User.objects.filter(username__icontains=request)
+		unfiltered = User.objects.all()
 
-	# 	reduce(operator.and_,)
+		users = unfiltered.filter(email = query)
+		users = users | unfiltered.filter(first_name = query)
 
-	# 	jData = {
-	# 		'postData': str(request)
-	# 	}
+		if users.count() > 0:
+			querylist.append({'queryset': users, 'serializer_class': UserSerializer})
+		else:
+			querylist.append({'queryset': User.objects.none(), 'serializer_class': UserSerializer})
 
-	# 	return HttpResponse(
-	# 		json.dumps(jData),
-	# 		status=200,
-	# 		content_type="application/json"
-	# 	)
+		unfiltered = JobListing.objects.all()
+
+		jobPosts = unfiltered.filter(job_email = query)
+
+		jobPosts = jobPosts | unfiltered.filter(job_position__contains=query)
+
+		jobPosts = jobPosts | unfiltered.filter(job_description__contains=query)
+
+		if jobPosts.count() > 0:
+			querylist.append({'queryset': jobPosts, 'serializer_class': JobPostSerializer})
+		else:
+			querylist.append({'queryset': JobListing.objects.none(), 'serializer_class': JobPostSerializer})
+
+		availPosts = AvailabilityListing.objects.filter(short_description__contains=query)
+
+		if availPosts.count() > 0:
+			querylist.append({'queryset': availPosts, 'serializer_class': AvailabilityListing})
+		else:
+			querylist.append({'queryset': AvailabilityListing.objects.none(), 'serializer_class': AvailabilityListing})
+
+		return querylist
