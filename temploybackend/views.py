@@ -228,7 +228,7 @@ class SearchView(ObjectMultipleModelAPIView):
 		else:
 			querylist.append({'queryset': JobListing.objects.none(), 'serializer_class': JobPostSerializer})
 
-		availPosts = AvailabilityListing.objects.filter(short_description__contains=query)
+		availPosts = AvailabilityListing.objects.filter(description__contains=query)
 
 		if availPosts.count() > 0:
 			querylist.append({'queryset': availPosts, 'serializer_class': AvailabilityListing})

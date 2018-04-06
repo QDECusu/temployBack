@@ -23,7 +23,7 @@ class getUserPostView(views.APIView):
 		jData = []
 		for job in jobList:
 			jData.append({
-				'user': job.user.username,
+				'id': job.id,
 				'company_name': job.company_name,
 				'job_position': job.job_position,
 				'job_phone': job.job_phone,
@@ -49,5 +49,5 @@ class jobPostViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:
-			return JobListing.objects.all()
+			return JobListing.objects.exclude(user=self.request.user)
 		return JobListing.objects.filter(user=self.request.user)

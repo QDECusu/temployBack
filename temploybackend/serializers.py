@@ -66,34 +66,34 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 		model = Group
 		fields = ('url', 'name')
 
-class JobPostSerializer(serializers.HyperlinkedModelSerializer):
+class JobPostSerializer(serializers.ModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
 		default=serializers.CurrentUserDefault(),
 		read_only=True
 	)
 
-	url = serializers.HyperlinkedIdentityField(view_name="JobPosts-detail")
+	# url = serializers.HyperlinkedIdentityField(view_name="JobPosts-detail")
 
 	class Meta:
 		model = JobListing
-		fields = ('url', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
+		fields = ('id', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
 
 	def create(self, validated_data):
 		post = super().create(validated_data)
 		post.save()
 		return post
 
-class AvailabilityPostSerializer(serializers.HyperlinkedModelSerializer):
+class AvailabilityPostSerializer(serializers.ModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
 		default=serializers.CurrentUserDefault(),
 		read_only=True
 	)
 
-	url = serializers.HyperlinkedIdentityField(view_name="AvailabilityPosts-detail")
+	# url = serializers.HyperlinkedIdentityField(view_name="AvailabilityPosts-detail")
 
 	class Meta:
 		model = AvailabilityListing
-		fields = ('url', 'user', 'description', 'schedule', 'post_date')
+		fields = ('id', 'user', 'description', 'schedule', 'post_date')
 
 	def create(self, validated_data):
 		post = super().create(validated_data)
