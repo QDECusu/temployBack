@@ -13,9 +13,9 @@ services:
   web:
     container_name: temploy-backend
     build: ./
-    command: python3 -u manage.py runserver 0.0.0.0:8000
     volumes:
       - ./:/var/www/
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - "nginx-proxy"
     ports:
