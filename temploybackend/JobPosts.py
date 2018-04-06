@@ -49,5 +49,5 @@ class jobPostViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:
-			return AvailabilityListing.objects.all()
-		return AvailabilityListing.objects.filter(user=self.request.user)
+			return JobListing.objects.all()
+		return JobListing.objects.filter(user=self.request.user)
