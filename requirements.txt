@@ -1,5 +1,6 @@
 django
 pyjwt
+Pillow
 djangorestframework==3.7.7
 django-cors-headers
 django-rest-multiple-models

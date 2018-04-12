@@ -52,7 +52,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Profile
 		depth = 1
-		fields = ('id', 'user', 'zipcode', 'rating', 'skills', 'short_description')
+		fields = ('id', 'user', 'zipcode', 'rating', 'skills', 'short_description', 'image')
 
 	def update(self, instance, validated_data):
 		user_data = validated_data.pop('user', {})
@@ -60,6 +60,11 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		User.objects.filter(id=instance.user.id).update(**user_data)
 		instance = Profile.objects.get(id=instance.id)
 		return super(ProfileSerializer, self).update(instance, validated_data)
+
+class ProfilePictureSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Profile
+		fields = ('pk', 'image', )
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:

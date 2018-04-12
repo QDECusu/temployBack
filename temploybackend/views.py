@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer, AvailabilityPostSerializer
+from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer, AvailabilityPostSerializer, ProfilePictureSerializer
 from .models import JobListing, Profile, AvailabilityListing
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 
@@ -192,6 +192,14 @@ class UserProfileView(views.APIView):
 			status=200,
 			content_type="application/json"
 		)
+
+class ProfilePictureView(viewsets.ModelViewSet):
+	serializer_class = ProfilePictureSerializer
+	def get_queryset(self):
+		if self.request.method in permissions.SAFE_METHODS:
+			return Profile.objects.all()
+		return Profile.objects.filter(user=self.request.user)
+
 
 class SearchView(ObjectMultipleModelAPIView):
 	"""
