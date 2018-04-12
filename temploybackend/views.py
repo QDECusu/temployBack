@@ -194,6 +194,11 @@ class UserProfileView(views.APIView):
 		)
 
 class ProfilePictureView(viewsets.ModelViewSet):
+	"""
+	API Endpoint that allows a user to update their photo
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
 	serializer_class = ProfilePictureSerializer
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:
