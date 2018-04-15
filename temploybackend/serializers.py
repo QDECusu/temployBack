@@ -62,20 +62,9 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		return super(ProfileSerializer, self).update(instance, validated_data)
 
 class ProfilePictureSerializer(serializers.ModelSerializer):
-	user = serializers.PrimaryKeyRelatedField(
-		default=serializers.CurrentUserDefault(),
-		read_only=True
-	)
-
 	class Meta:
 		model = Profile
 		fields = ('user', 'image', )
-
-	def create(self, instance, validated_data):
-		user = Profile.objects.filter(id=instance.user.id)
-		user = super().update(validated_data)
-		user.save()
-		return user
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:

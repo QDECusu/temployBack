@@ -200,10 +200,19 @@ class ProfilePictureView(viewsets.ModelViewSet):
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	serializer_class = ProfilePictureSerializer
+
 	def get_queryset(self):
-		if self.request.method in permissions.SAFE_METHODS:
-			return Profile.objects.all()
 		return Profile.objects.filter(user=self.request.user)
+
+	def create(self, request, *args, **kwargs):
+		user = Profile.objects.filter(user=request.user).first()
+		user.image.delete()
+
+		upload = request.data['file']
+
+		user.image.save(upload.name, upload)
+		serializer = self.get_serializer(Profile.objects.filter(user=request.user).first(), many=False)
+		return Response(serializer.data, status=200)
 
 
 class SearchView(ObjectMultipleModelAPIView):
@@ -221,8 +230,8 @@ class SearchView(ObjectMultipleModelAPIView):
 		unfiltered = User.objects.all()
 
 		users = unfiltered.filter(email = query)
-		users = users | unfiltered.filter(username=query)
-		users = users | unfiltered.filter(first_name = query)
+		users = users | unfiltered.filter(username__contains=query)
+		users = users | unfiltered.filter(first_name__contains = query)
 
 		if users.count() > 0:
 			querylist.append({'queryset': users, 'serializer_class': UserSerializer})
