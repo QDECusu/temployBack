@@ -193,7 +193,9 @@ class UserProfileView(views.APIView):
 			content_type="application/json"
 		)
 
-class ProfilePictureView(viewsets.ModelViewSet):
+class ProfilePictureView(	mixins.CreateModelMixin,
+							mixins.ListModelMixin,
+							viewsets.GenericViewSet):
 	"""
 	API Endpoint that allows a user to update their photo
 	"""
