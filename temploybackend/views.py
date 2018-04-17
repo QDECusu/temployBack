@@ -260,7 +260,7 @@ class SearchView(ObjectMultipleModelAPIView):
 
 		return querylist
 
-class ApplicationView(mixins.ListModelMixin, viewsets.GenericViewSet):
+class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
 	"""
 	API endpoint that allows a user to be viewed with authentication
 	1. Create a Superuser using the manage.py
@@ -276,6 +276,35 @@ class ApplicationView(mixins.ListModelMixin, viewsets.GenericViewSet):
 	def get_queryset(self):
 		applications = Application.objects.filter(user=self.request.user)
 		return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
+
+	def create(self, request):
+		application = Application.objects.create(user=request.user, job_listing=JobListing.objects.filter(id=request.data['job_post']).first())
+
+		profile = Profile.objects.filter(user=self.request.user).first()
+		jData = {
+			'id': int(profile.id),
+			'username': str(profile.user.username),
+			'first_name': str(profile.user.first_name),
+			'last_name': str(profile.user.last_name),
+			'email': str(profile.user.email),
+			'Group': str(profile.user.groups),
+			'zipcode': profile.zipcode,
+			'rating':profile.rating,
+			'skills': profile.skills,
+			'short_description': profile.short_description
+		}
+
+		returnApplications = []
+		app = {}
+		app['job_post'] = application.job_listing.id 
+		app['user'] = jData
+		returnApplications.append(app)
+
+		return HttpResponse(
+			json.dumps(returnApplications),
+			status=201,
+			content_type="application/json"
+		)
 
 	def list(self, request):
 		queryset = Application.objects.filter(user=self.request.user)

@@ -120,13 +120,12 @@ class ProfileField(serializers.RelatedField):
 		return json.dumps(jData)
 
 class ApplicationSerializer(serializers.ModelSerializer):
-	#user = ProfileField(queryset=Profile.objects.all(), many=False)
-	user = ProfileSerializer(source='profile_set')
-	#user = serializers.PrimaryKeyRelatedField(
-	# 	default=serializers.CurrentUserDefault(),
-	# 	read_only=True
-	# )
-
 	class Meta:
 		model = Application
 		fields = ('user', 'job_listing')
+
+	def create(self, validated_data):
+		user = self.request.user
+		User.objects.filter(id=instance.user.id).update(**user_data)
+		instance = Profile.objects.get(id=instance.id)
+		return super(ProfileSerializer, self).update(instance, validated_data)
