@@ -29,4 +29,9 @@ class Profile(models.Model):
 	skills = models.TextField(blank=True)
 	short_description = models.TextField(blank=True)
 	image = models.ImageField("Uploaded image", upload_to=scramble_uploaded_filename, blank=True)
+
+class Application(models.Model):
+	job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 	

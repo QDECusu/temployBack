@@ -16,6 +16,7 @@ router.register(r'JobPosts', JobPosts.jobPostViewSet, base_name="JobPosts")
 router.register(r'AvailabilityPosts', AvailabilityPost.availabilityPostViewSet, base_name="AvailabilityPosts")
 router.register(r'Profile', views.ProfileView, base_name="Profile")
 router.register(r'profilePicture', views.ProfilePictureView, base_name="ProfilePictureSerializer")
+router.register(r'applications', views.ApplicationView, base_name="Application")
 #router.register(r'search', views.SearchView, base_name='search')
 ###########################
 

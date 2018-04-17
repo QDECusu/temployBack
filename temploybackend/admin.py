@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(JobListing)
 admin.site.register(AvailabilityListing)
 admin.site.register(Profile)
+admin.site.register(Application)

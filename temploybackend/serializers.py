@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import JobListing, Profile, AvailabilityListing
+from .models import JobListing, Profile, AvailabilityListing, Application
 from django.contrib.auth.hashers import check_password
 from django.conf import settings
 import jwt, json
@@ -77,8 +77,6 @@ class JobPostSerializer(serializers.ModelSerializer):
 		read_only=True
 	)
 
-	# url = serializers.HyperlinkedIdentityField(view_name="JobPosts-detail")
-
 	class Meta:
 		model = JobListing
 		fields = ('id', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
@@ -94,8 +92,6 @@ class AvailabilityPostSerializer(serializers.ModelSerializer):
 		read_only=True
 	)
 
-	# url = serializers.HyperlinkedIdentityField(view_name="AvailabilityPosts-detail")
-
 	class Meta:
 		model = AvailabilityListing
 		fields = ('id', 'user', 'description', 'schedule', 'post_date')
@@ -104,3 +100,33 @@ class AvailabilityPostSerializer(serializers.ModelSerializer):
 		post = super().create(validated_data)
 		post.save()
 		return post
+
+class ProfileField(serializers.RelatedField):
+	def to_representation(self, value):
+		user = value
+		profile = Profile.objects.filter(user=user.id).first()
+		jData = {
+			'id': int(profile.id),
+			'username': str(user.username),
+			'first_name': str(user.first_name),
+			'last_name': str(user.last_name),
+			'email': str(user.email),
+			'Group': str(user.groups),
+			'zipcode': profile.zipcode,
+			'rating':profile.rating,
+			'skills': profile.skills,
+			'short_description': profile.short_description
+		}
+		return json.dumps(jData)
+
+class ApplicationSerializer(serializers.ModelSerializer):
+	#user = ProfileField(queryset=Profile.objects.all(), many=False)
+	user = ProfileSerializer(source='profile_set')
+	#user = serializers.PrimaryKeyRelatedField(
+	# 	default=serializers.CurrentUserDefault(),
+	# 	read_only=True
+	# )
+
+	class Meta:
+		model = Application
+		fields = ('user', 'job_listing')

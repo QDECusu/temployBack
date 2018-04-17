@@ -18,8 +18,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, mixins, generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer, AvailabilityPostSerializer, ProfilePictureSerializer
-from .models import JobListing, Profile, AvailabilityListing
+from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer, ProfileSerializer, AvailabilityPostSerializer, ProfilePictureSerializer, ApplicationSerializer
+from .models import JobListing, Profile, AvailabilityListing, Application
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 class Home(views.APIView):
@@ -259,3 +259,50 @@ class SearchView(ObjectMultipleModelAPIView):
 			querylist.append({'queryset': AvailabilityListing.objects.none(), 'serializer_class': AvailabilityPostSerializer})
 
 		return querylist
+
+class ApplicationView(mixins.ListModelMixin, viewsets.GenericViewSet):
+	"""
+	API endpoint that allows a user to be viewed with authentication
+	1. Create a Superuser using the manage.py
+	2. Create a User from the admin panel (If desired, not nessesarily required)
+	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
+	key = Authorization
+	data = Token with your JWT from the login
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+	serializer_class = ProfileSerializer
+	
+	def get_queryset(self):
+		applications = Application.objects.filter(user=self.request.user)
+		return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
+
+	def list(self, request):
+		queryset = Application.objects.filter(user=self.request.user)
+		applications = queryset.filter(job_listing=self.request.query_params.get('jobPost', None))
+		profile = Profile.objects.filter(user=self.request.user).first()
+		jData = {
+			'id': int(profile.id),
+			'username': str(profile.user.username),
+			'first_name': str(profile.user.first_name),
+			'last_name': str(profile.user.last_name),
+			'email': str(profile.user.email),
+			'Group': str(profile.user.groups),
+			'zipcode': profile.zipcode,
+			'rating':profile.rating,
+			'skills': profile.skills,
+			'short_description': profile.short_description
+		}
+		
+		returnApplications = []
+		for application in applications:
+			app = {}
+			app['job_post'] = application.job_listing.id 
+			app['user'] = jData
+			returnApplications.append(app)
+
+		return HttpResponse(
+			json.dumps(returnApplications),
+			status=200,
+			content_type="application/json"
+		)
