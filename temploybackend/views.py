@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import HttpRequest
 #For login portion
 import jwt, json
 from rest_framework import views
@@ -184,7 +185,8 @@ class UserProfileView(views.APIView):
 			'zipcode': profile.zipcode,
 			'rating':profile.rating,
 			'skills': profile.skills,
-			'short_description': profile.short_description
+			'short_description': profile.short_description,
+			'image': request.build_absolute_uri(profile.image.url)
 		}
 
 		return HttpResponse(
