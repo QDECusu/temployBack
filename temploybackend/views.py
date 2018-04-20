@@ -175,6 +175,9 @@ class UserProfileView(views.APIView):
 	def get(self, request, *args, **kwargs):
 		user = request.user
 		profile = Profile.objects.filter(user=user.id).first()
+		image = None
+		if profile.image:
+			image = request.build_absolute_uri(profile.image.url)
 		jData = {
 			'id': int(profile.id),
 			'username': str(user.username),
@@ -186,7 +189,7 @@ class UserProfileView(views.APIView):
 			'rating':profile.rating,
 			'skills': profile.skills,
 			'short_description': profile.short_description,
-			'image': request.build_absolute_uri(profile.image.url)
+			'image': image
 		}
 
 		return HttpResponse(
