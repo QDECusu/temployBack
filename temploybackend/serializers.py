@@ -77,14 +77,22 @@ class JobPostSerializer(serializers.ModelSerializer):
 		read_only=True
 	)
 
+	has_applied = serializers.SerializerMethodField()
+
 	class Meta:
 		model = JobListing
-		fields = ('id', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule')
+		fields = ('id', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule', 'has_applied')
 
 	def create(self, validated_data):
 		post = super().create(validated_data)
 		post.save()
 		return post
+
+	def get_has_applied(self, instance):
+		user = self.context['request'].user
+		applications = Application.objects.filter(user=user)
+		applications = applications.filter(job_listing=instance)
+		return applications.exists()
 
 class AvailabilityPostSerializer(serializers.ModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
