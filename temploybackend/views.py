@@ -223,8 +223,8 @@ class SearchView(ObjectMultipleModelAPIView):
 	"""
 	API endpoint for searching the database for useful information related to users.
 	"""
-	# authentication_classes = (TokenAuthentication,)
-	# permission_classes = (IsAuthenticated,)
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
 
 	def get_querylist(self):
 		query = self.request.query_params['q']
@@ -264,12 +264,7 @@ class SearchView(ObjectMultipleModelAPIView):
 
 class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
 	"""
-	API endpoint that allows a user to be viewed with authentication
-	1. Create a Superuser using the manage.py
-	2. Create a User from the admin panel (If desired, not nessesarily required)
-	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
-	key = Authorization
-	data = Token with your JWT from the login
+	API endpoint which allows for the viewing and creating of applications
 	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
