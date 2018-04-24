@@ -9,6 +9,7 @@ from .models import AvailabilityListing
 #For Authenticating
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrAdmin, IsOwnerOrAdminOrMod, IsAdminOrMod
 
 class getUserPostView(views.APIView):
 	"""
@@ -48,5 +49,8 @@ class availabilityPostViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:
-			return AvailabilityListing.objects.all()
-		return AvailabilityListing.objects.filter(user=self.request.user)
+			return JobListing.objects.exclude(user=self.request.user)
+		elif IsAdminOrMod(self.request) and self.request.method not in permissions.SAFE_METHODS:
+			return JobListing.objects.all()
+		else:
+			return JobListing.objects.filter(user=self.request.user)

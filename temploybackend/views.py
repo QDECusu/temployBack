@@ -6,6 +6,7 @@ from rest_framework import views
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.conf import settings
@@ -14,6 +15,7 @@ from .toDict import to_dict
 #For Authenticating
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrAdmin, IsOwnerOrAdminOrMod, IsAdminOrMod, IsModerator
 
 #For django rest framework (+ serializers)
 from django.contrib.auth.models import User, Group
@@ -150,18 +152,13 @@ class CreateUserView(generics.CreateAPIView):
 class ProfileView(viewsets.ModelViewSet):
 	"""
 	API endpoint that allows a user to be viewed with authentication
-	1. Create a Superuser using the manage.py
-	2. Create a User from the admin panel (If desired, not nessesarily required)
-	3. Make a Post request to hostname/getUserJsonAuth/ with the following in the headers
-	key = Authorization
-	data = Token with your JWT from the login
 	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	serializer_class = ProfileSerializer
 
 	def get_queryset(self):
-		if self.request.method in permissions.SAFE_METHODS:
+		if self.request.method in permissions.SAFE_METHODS or IsAdminOrMod(self.request):
 			return Profile.objects.all()
 		return Profile.objects.filter(user=self.request.user)
 
@@ -237,8 +234,8 @@ class SearchView(ObjectMultipleModelAPIView):
 		unfiltered = User.objects.all()
 
 		users = unfiltered.filter(email = query)
-		users = users | unfiltered.filter(username__contains=query)
-		users = users | unfiltered.filter(first_name__contains = query)
+		users = users | unfiltered.filter(username__icontains=query)
+		users = users | unfiltered.filter(first_name__icontains = query)
 
 		if users.count() > 0:
 			querylist.append({'queryset': users, 'serializer_class': UserSerializer})
@@ -248,15 +245,15 @@ class SearchView(ObjectMultipleModelAPIView):
 		unfiltered = JobListing.objects.all()
 
 		jobPosts = unfiltered.filter(job_email = query)
-		jobPosts = jobPosts | unfiltered.filter(job_position__contains=query)
-		jobPosts = jobPosts | unfiltered.filter(job_description__contains=query)
+		jobPosts = jobPosts | unfiltered.filter(job_position__icontains=query)
+		jobPosts = jobPosts | unfiltered.filter(job_description__icontains=query)
 
 		if jobPosts.count() > 0:
 			querylist.append({'queryset': jobPosts, 'serializer_class': JobPostSerializer})
 		else:
 			querylist.append({'queryset': JobListing.objects.none(), 'serializer_class': JobPostSerializer})
 
-		availPosts = AvailabilityListing.objects.filter(description__contains=query)
+		availPosts = AvailabilityListing.objects.filter(description__icontains=query)
 
 		if availPosts.count() > 0:
 			querylist.append({'queryset': availPosts, 'serializer_class': AvailabilityPostSerializer})
@@ -339,4 +336,21 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.G
 			json.dumps(returnApplications),
 			status=200,
 			content_type="application/json"
+		)
+
+class addToModerators(views.APIView):
+	"""
+	API endpoint that takes a username, and if the authed user is an admin, creates a Moderator
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated, IsAdminUser, IsModerator)
+
+	def post(self, request, *args, **kwargs):
+		user_id = request.data['user_id']
+		user = User.objects.filter(id=user_id).first()
+		group = Group.objects.get(name="Moderators")
+		group.user_set.add(user)
+
+		return HttpResponse(
+			status=200,
 		)

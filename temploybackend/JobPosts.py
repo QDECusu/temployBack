@@ -5,11 +5,12 @@ from rest_framework import viewsets, mixins, generics, views
 from rest_framework.generics import CreateAPIView
 from rest_framework import permissions
 from .serializers import UserSerializer, GroupSerializer, JobPostSerializer, CreateUserSerializer
-from .models import JobListing, Profile
+from .models import JobListing, Profile, Application
 import jwt, json
 #For Authenticating
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrAdmin, IsOwnerOrAdminOrMod, IsAdminOrMod
 
 class getUserPostView(views.APIView):
 	"""
@@ -22,6 +23,7 @@ class getUserPostView(views.APIView):
 		jobList = JobListing.objects.filter(user=request.user.id)
 		jData = []
 		for job in jobList:
+			applications = Application.objects.filter(job_listing=job)
 			jData.append({
 				'id': job.id,
 				'company_name': job.company_name,
@@ -30,7 +32,8 @@ class getUserPostView(views.APIView):
 				'job_email': job.job_email,
 				'job_description': job.job_description,
 				'job_schedule': job.job_schedule,
-				'job_post_date': str(job.job_post_date)
+				'job_post_date': str(job.job_post_date),
+				'applications': applications.count()
 			})
 
 		return HttpResponse(
@@ -50,4 +53,7 @@ class jobPostViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:
 			return JobListing.objects.exclude(user=self.request.user)
-		return JobListing.objects.filter(user=self.request.user)
+		elif IsAdminOrMod(self.request) and self.request.method not in permissions.SAFE_METHODS:
+			return JobListing.objects.all()
+		else:
+			return JobListing.objects.filter(user=self.request.user)

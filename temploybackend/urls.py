@@ -31,5 +31,6 @@ urlpatterns = [
 	path('listUserJobPosts/', JobPosts.getUserPostView.as_view(), name='listUserJobPosts'),
 	path('listUserAvailabilityPosts/', JobPosts.getUserPostView.as_view(), name='listUserAvailabilityPosts'),	
 	path('profileDetail/', views.UserProfileView.as_view(), name='profileDetail'),
+	path('addMod/', views.addToModerators.as_view(), name='addMod'),
 	url(r'signup/', views.CreateUserView.as_view(), name='signup'),
 ]
