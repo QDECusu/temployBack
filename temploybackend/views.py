@@ -15,7 +15,7 @@ from .toDict import to_dict
 #For Authenticating
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsOwnerOrAdmin, IsOwnerOrAdminOrMod, IsAdminOrMod, IsModerator
+from .permissions import IsOwnerOrAdmin, IsOwnerOrAdminOrMod, IsAdministratorOrModerator, IsAdminOrMod, IsModerator
 
 #For django rest framework (+ serializers)
 from django.contrib.auth.models import User, Group
@@ -338,14 +338,15 @@ class addToModerators(views.APIView):
 	API endpoint that takes a username, and if the authed user is an admin, creates a Moderator
 	"""
 	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated, IsAdminUser, IsModerator)
+	permission_classes = (IsAuthenticated, IsAdministratorOrModerator)
 
 	def post(self, request, *args, **kwargs):
-		user_id = request.data['user_id']
-		user = User.objects.filter(id=user_id).first()
-		group = Group.objects.get(name="Moderators")
-		group.user_set.add(user)
+            user_id = request.data['user_id']
+            prof = Profile.objects.filter(id=user_id).first()
+            user = prof.user
+            group = Group.objects.get(name="Moderators")
+            status = group.user_set.add(user)
 
-		return HttpResponse(
-			status=200,
-		)
+            return HttpResponse(
+                status=200,
+            )
