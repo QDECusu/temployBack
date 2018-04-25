@@ -262,19 +262,38 @@ class SearchView(ObjectMultipleModelAPIView):
 
 		return querylist
 
-class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
 	"""
-	API endpoint which allows for the viewing and creating of applications
+	API endpoint which allows for the viewing and creating of applications, along with accepting them
 	"""
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	serializer_class = ProfileSerializer
 	
 	def get_queryset(self):
-		applications = Application.objects.filter(user=self.request.user)
-		return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
+		if self.request.method == 'PATCH':
+			return Application.objects.all()
+		else:
+			applications = Application.objects.filter(user=self.request.user)
+			return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
 
 	def create(self, request):
+		#Test to see if we already have a job application for this
+		applications = Application.objects.filter(user=request.user)
+		job_post_id = request.data.get('job_post', None)
+		job_post = JobListing.objects.filter(id=job_post_id).first()
+		if job_post_id == None or job_post == None:
+			return HttpResponse(
+				status=400,
+			)
+		else:
+			for application in applications:
+				if job_post == application.job_listing: #If we have already created an application for this job post
+					return HttpResponse(
+						json.dumps({"error" : "Application already exists"}),
+						status=400,
+					)
+
 		application = Application.objects.create(user=request.user, job_listing=JobListing.objects.filter(id=request.data['job_post']).first())
 
 		profile = Profile.objects.filter(user=self.request.user).first()
@@ -293,6 +312,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.G
 
 		returnApplications = []
 		app = {}
+		app['id'] = application.id
 		app['job_post'] = application.job_listing.id 
 		app['user'] = jData
 		returnApplications.append(app)
@@ -323,6 +343,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.G
 		returnApplications = []
 		for application in applications:
 			app = {}
+			app['id'] = application.id
 			app['job_post'] = application.job_listing.id 
 			app['user'] = jData
 			returnApplications.append(app)
@@ -332,6 +353,20 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.G
 			status=200,
 			content_type="application/json"
 		)
+
+	def partial_update(self, request, *args, **kwargs):
+		instance = self.get_object()
+
+		if instance.job_listing.user == request.user:
+			instance.accepted = True
+			instance.save()
+			return HttpResponse(
+				status=200
+			)
+		else:
+			return HttpResponse(
+				status=401
+			)
 
 class addToModerators(views.APIView):
 	"""
