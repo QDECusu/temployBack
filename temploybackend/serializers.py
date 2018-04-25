@@ -106,7 +106,10 @@ class JobPostSerializer(serializers.ModelSerializer):
 		applications = Application.objects.filter(user=user)
 		application = applications.filter(job_listing=instance).first()
 
-		return application.accepted
+		if application != None:
+			return application.accepted
+		else:
+			return ""
 
 class AvailabilityPostSerializer(serializers.ModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(
