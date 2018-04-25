@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, views
 from rest_framework import permissions
 from .serializers import UserSerializer, AvailabilityPostSerializer
-from .models import AvailabilityListing
+from .models import AvailabilityListing, Profile
 #For Authenticating
 from .auth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -20,6 +20,41 @@ class getUserPostView(views.APIView):
 
 	def get(self, request):
 		availList = AvailabilityListing.objects.filter(user=request.user)
+		jData = []
+		for post in availList:
+			jData.append({
+				'id' : post.id,
+				'user_id' : post.user.id,
+				'user': post.user.username,
+				'description' : post.description,
+				'schedule' : post.schedule,
+				'post_date' : str(post.post_date)
+			})
+
+		return HttpResponse(
+			json.dumps(jData),
+			status=200,
+			content_type="application/json"
+		)
+
+class getOtherPostView(views.APIView):
+	"""
+	API endpoint to get posts assigned to user
+	"""
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+
+	def get(self, request):
+		user = None
+		if request.query_params['userId'] != None:
+			user = Profile.objects.filter(id = request.query_params['userId']).first()
+
+		if user == None:
+			return HttpResponse(
+				status=404,
+			)
+		
+		availList = AvailabilityListing.objects.filter(user=user.user)
 		jData = []
 		for post in availList:
 			jData.append({
