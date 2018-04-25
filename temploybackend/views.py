@@ -346,6 +346,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 				'skills': profile.skills,
 				'short_description': profile.short_description
 			}
+			app['accepted'] = application.accepted
 			returnApplications.append(app)
 
 		return HttpResponse(
