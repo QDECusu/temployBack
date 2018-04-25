@@ -40,11 +40,16 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		extra_kwargs = {'password': {'write_only': True}}
 
 class UserForProfileSerializer(serializers.ModelSerializer):
+
+	is_mod = serializers.SerializerMethodField()
 	
 	class Meta:
 		model = User
-		fields = ('username', 'email', 'password', 'first_name', 'last_name')
+		fields = ('username', 'email', 'password', 'first_name', 'last_name', 'is_mod')
 		extra_kwargs = {'password': {'write_only': True}}
+
+	def get_is_mod(self, instance):
+		return instance.groups.filter(name="Moderators").exists()
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 	user = UserForProfileSerializer()
@@ -130,7 +135,7 @@ class ProfileField(serializers.RelatedField):
 class ApplicationSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Application
-		fields = ('user', 'job_listing')
+		fields = ('user', 'job_listing', 'accepted')
 
 	def create(self, validated_data):
 		user = self.request.user

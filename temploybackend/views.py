@@ -181,7 +181,7 @@ class UserProfileView(views.APIView):
 			'first_name': str(user.first_name),
 			'last_name': str(user.last_name),
 			'email': str(user.email),
-			'Group': str(user.groups),
+			'is_mod': user.groups.filter(name="Moderators").exists(),
 			'zipcode': profile.zipcode,
 			'rating':profile.rating,
 			'skills': profile.skills,
