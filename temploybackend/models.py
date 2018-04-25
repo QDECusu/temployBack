@@ -33,6 +33,6 @@ class Profile(models.Model):
 class Application(models.Model):
 	job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	accepted = models.BooleanField(default=False)
+	accepted = models.NullBooleanField(default=None)
 
 	

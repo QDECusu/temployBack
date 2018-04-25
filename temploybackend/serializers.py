@@ -84,9 +84,11 @@ class JobPostSerializer(serializers.ModelSerializer):
 
 	has_applied = serializers.SerializerMethodField()
 
+	has_accepted = serializers.SerializerMethodField()
+
 	class Meta:
 		model = JobListing
-		fields = ('id', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule', 'has_applied')
+		fields = ('id', 'user', 'company_name', 'job_position', 'job_phone', 'job_email', 'job_description', 'job_schedule', 'has_applied', 'has_accepted')
 
 	def create(self, validated_data):
 		post = super().create(validated_data)
@@ -98,6 +100,13 @@ class JobPostSerializer(serializers.ModelSerializer):
 		applications = Application.objects.filter(user=user)
 		applications = applications.filter(job_listing=instance)
 		return applications.exists()
+
+	def get_has_accepted(self, instance):
+		user = self.context['request'].user
+		applications = Application.objects.filter(user=user)
+		application = applications.filter(job_listing=instance).first()
+
+		return application.accepted
 
 class AvailabilityPostSerializer(serializers.ModelSerializer):
 	user = serializers.PrimaryKeyRelatedField(

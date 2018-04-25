@@ -23,9 +23,9 @@ router.register(r'applications', views.ApplicationView, base_name="Application")
 urlpatterns = [
 	url(r'^', include(router.urls)),
 	url(r'^api-auth', include('rest_framework.urls', namespace='rest_framework')),
-        path('home/', views.Home.as_view(), name='home'),
-        path('login/', views.Login.as_view(), name='login'),
-        path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
+    path('home/', views.Home.as_view(), name='home'),
+	path('login/', views.Login.as_view(), name='login'),
+    path('getAllUsersNonAuth/', views.TestSimpleUserJson.as_view(), name='getAllUsersNonAuth'),
 	path('getUserDetail/', views.TestSimpleUserJsonAuth.as_view(), name='getUserDetail'),
 	path('search', views.SearchView.as_view(), name='search'),
 	path('listUserJobPosts/', JobPosts.getUserPostView.as_view(), name='listUserJobPosts'),

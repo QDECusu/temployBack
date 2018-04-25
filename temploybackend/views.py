@@ -356,9 +356,18 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 
 	def partial_update(self, request, *args, **kwargs):
 		instance = self.get_object()
+		accepted=None
+
+		if request.data['accepted'] != None:
+			accepted = request.data['accepted']
+			if isinstance(accepted, str):
+				return HttpResponse(
+					json.dumps({"error" : "Please submit true or false as a bool in the body"}),
+					status=400,
+				)
 
 		if instance.job_listing.user == request.user:
-			instance.accepted = True
+			instance.accepted = accepted
 			instance.save()
 			return HttpResponse(
 				status=200
