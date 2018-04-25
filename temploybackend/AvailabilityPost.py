@@ -23,6 +23,7 @@ class getUserPostView(views.APIView):
 		jData = []
 		for post in availList:
 			jData.append({
+				'id' : post.id,
 				'user_id' : post.user.id,
 				'user': post.user.username,
 				'description' : post.description,
