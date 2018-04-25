@@ -26,7 +26,7 @@ class CreateUserSerializer(serializers.HyperlinkedModelSerializer):
 		user = User.objects.get(username=instance.username)	
 		payload = {
 			'id': user.id,
-			'email': user.email,
+			'username': user.username,
 		}
 		jwt_token = jwt.encode(payload, settings.SECRET_KEY).decode("utf-8")
 
