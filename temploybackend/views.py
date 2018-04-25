@@ -231,16 +231,16 @@ class SearchView(ObjectMultipleModelAPIView):
 
 		querylist = []
 
-		unfiltered = User.objects.all()
+		unfiltered = Profile.objects.all()
 
-		users = unfiltered.filter(email = query)
-		users = users | unfiltered.filter(username__icontains=query)
-		users = users | unfiltered.filter(first_name__icontains = query)
+		users = unfiltered.filter(user__email = query)
+		users = users | unfiltered.filter(user__username__icontains=query)
+		users = users | unfiltered.filter(user__first_name__icontains = query)
 
 		if users.count() > 0:
-			querylist.append({'queryset': users, 'serializer_class': UserSerializer})
+			querylist.append({'queryset': users, 'serializer_class': ProfileSerializer})
 		else:
-			querylist.append({'queryset': User.objects.none(), 'serializer_class': UserSerializer})
+			querylist.append({'queryset': Profile.objects.none(), 'serializer_class': ProfileSerializer})
 
 		unfiltered = JobListing.objects.all()
 
