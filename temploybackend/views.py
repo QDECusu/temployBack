@@ -236,6 +236,7 @@ class SearchView(ObjectMultipleModelAPIView):
 		users = unfiltered.filter(user__email = query)
 		users = users | unfiltered.filter(user__username__icontains=query)
 		users = users | unfiltered.filter(user__first_name__icontains = query)
+		users = users.exclude(user = self.request.user)
 
 		if users.count() > 0:
 			querylist.append({'queryset': users, 'serializer_class': ProfileSerializer})
@@ -244,9 +245,11 @@ class SearchView(ObjectMultipleModelAPIView):
 
 		unfiltered = JobListing.objects.all()
 
-		jobPosts = unfiltered.filter(job_email = query)
+		jobPosts = unfiltered.filter(job_email__icontains = query)
 		jobPosts = jobPosts | unfiltered.filter(job_position__icontains=query)
 		jobPosts = jobPosts | unfiltered.filter(job_description__icontains=query)
+		jobPosts = jobPosts.exclude(user=self.request.user)
+
 
 		if jobPosts.count() > 0:
 			querylist.append({'queryset': jobPosts, 'serializer_class': JobPostSerializer})
@@ -254,6 +257,7 @@ class SearchView(ObjectMultipleModelAPIView):
 			querylist.append({'queryset': JobListing.objects.none(), 'serializer_class': JobPostSerializer})
 
 		availPosts = AvailabilityListing.objects.filter(description__icontains=query)
+		availPosts = availPosts.exclude(user=self.request.user)
 
 		if availPosts.count() > 0:
 			querylist.append({'queryset': availPosts, 'serializer_class': AvailabilityPostSerializer})
