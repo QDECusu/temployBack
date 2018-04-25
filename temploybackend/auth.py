@@ -42,13 +42,13 @@ class TokenAuthentication(BaseAuthentication):
 	def authenticate_credentials(self, token):
 		model = self.get_model()
 		payload = jwt.decode(token, settings.SECRET_KEY)
-		email = payload['email']
+		username = payload['username']
 		userid = payload['id']
 		msg = {'Error': "Token mismatch",'status' :"401"}
 		try:
 			
 			user = User.objects.get(
-				email=email,
+				username=username,
 				id=userid,
 				is_active=True
 			)
@@ -56,7 +56,7 @@ class TokenAuthentication(BaseAuthentication):
 			return (user, token)
 
 		#TODO Need to get this portion below working, but it works for now, just doesn't do all validation			
-			if not user.token['token'] == token:
+			if not user.token['Token'] == token:
 				raise exceptions.AuthenticationFailed(msg)
 			   
 		except jwt.ExpiredSignature or jwt.DecodeError or jwt.InvalidTokenError:

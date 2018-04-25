@@ -124,7 +124,7 @@ class Login(views.APIView):
 		if passCheck:		
 			payload = {
 				'id': user.id,
-				'email': user.email,
+				'username': user.username,
 			}
 			jwt_token = {'token': jwt.encode(payload, settings.SECRET_KEY).decode("utf-8") }
 
