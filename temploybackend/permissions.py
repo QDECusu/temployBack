@@ -5,6 +5,10 @@ class IsModerator(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.groups.filter(name="Moderators").exists()
 
+class IsAdministratorOrModerator(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_staff or request.user.groups.filter(name="Moderators").exists()
+
 class IsOwnerOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
