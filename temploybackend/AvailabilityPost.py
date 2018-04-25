@@ -19,18 +19,15 @@ class getUserPostView(views.APIView):
 	permission_classes = (IsAuthenticated,)
 
 	def get(self, request):
-		jobList = AvailabilityListing.objects.filter(user=request.user.id)
+		availList = AvailabilityListing.objects.filter(user=request.user)
 		jData = []
-		for job in jobList:
+		for post in availList:
 			jData.append({
-				'user': job.user.username,
-				'company_name': job.company_name,
-				'job_position': job.job_position,
-				'job_phone': job.job_phone,
-				'job_email': job.job_email,
-				'job_description': job.job_description,
-				'job_schedule': job.job_schedule,
-				'job_post_date': str(job.job_post_date)
+				'test' : "test",
+				'user_id' : post.user.id,
+				'user': post.user.username,
+				'description' : post.description,
+				'schedule' : str(post.post_date)
 			})
 
 		return HttpResponse(
@@ -49,8 +46,8 @@ class availabilityPostViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		if self.request.method in permissions.SAFE_METHODS:
-			return JobListing.objects.exclude(user=self.request.user)
+			return AvailabilityListing.objects.exclude(user=self.request.user)
 		elif IsAdminOrMod(self.request) and self.request.method not in permissions.SAFE_METHODS:
-			return JobListing.objects.all()
+			return AvailabilityListing.objects.all()
 		else:
-			return JobListing.objects.filter(user=self.request.user)
+			return AvailabilityListing.objects.filter(user=self.request.user)
