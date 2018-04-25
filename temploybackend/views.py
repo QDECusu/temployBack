@@ -274,8 +274,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		if self.request.method == 'PATCH':
 			return Application.objects.all()
 		else:
-			return Application.objects.all()
-			applications = Application.objects.all()
+			applications = Application.objects.exclude(user=self.request.user)
 			return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
 
 	def create(self, request):
@@ -325,7 +324,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		)
 
 	def list(self, request):
-		queryset = Application.objects.all()
+		queryset = Application.objects.exclude(user=self.request.user)
 		applications = queryset.filter(job_listing=self.request.query_params.get('jobPost', None))
 		
 		returnApplications = []
