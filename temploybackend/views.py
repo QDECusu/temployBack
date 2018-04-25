@@ -274,7 +274,8 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		if self.request.method == 'PATCH':
 			return Application.objects.all()
 		else:
-			applications = Application.objects.filter(user=self.request.user)
+			return Application.objects.all()
+			applications = Application.objects.all()
 			return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
 
 	def create(self, request):
@@ -313,7 +314,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		returnApplications = []
 		app = {}
 		app['id'] = application.id
-		app['job_post'] = application.job_listing.id 
+		app['job_post'] = application.job_listing.id
 		app['user'] = jData
 		returnApplications.append(app)
 
@@ -324,28 +325,28 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		)
 
 	def list(self, request):
-		queryset = Application.objects.filter(user=self.request.user)
+		queryset = Application.objects.all()
 		applications = queryset.filter(job_listing=self.request.query_params.get('jobPost', None))
-		profile = Profile.objects.filter(user=self.request.user).first()
-		jData = {
-			'id': int(profile.id),
-			'username': str(profile.user.username),
-			'first_name': str(profile.user.first_name),
-			'last_name': str(profile.user.last_name),
-			'email': str(profile.user.email),
-			'Group': str(profile.user.groups),
-			'zipcode': profile.zipcode,
-			'rating':profile.rating,
-			'skills': profile.skills,
-			'short_description': profile.short_description
-		}
 		
 		returnApplications = []
 		for application in applications:
+			profile = Profile.objects.filter(user=application.user).first()
+
 			app = {}
 			app['id'] = application.id
 			app['job_post'] = application.job_listing.id 
-			app['user'] = jData
+			app['user'] = {
+				'id': int(profile.id),
+				'username': str(profile.user.username),
+				'first_name': str(profile.user.first_name),
+				'last_name': str(profile.user.last_name),
+				'email': str(profile.user.email),
+				'Group': str(profile.user.groups),
+				'zipcode': profile.zipcode,
+				'rating':profile.rating,
+				'skills': profile.skills,
+				'short_description': profile.short_description
+			}
 			returnApplications.append(app)
 
 		return HttpResponse(
