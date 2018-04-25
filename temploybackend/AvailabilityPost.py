@@ -23,11 +23,11 @@ class getUserPostView(views.APIView):
 		jData = []
 		for post in availList:
 			jData.append({
-				'test' : "test",
 				'user_id' : post.user.id,
 				'user': post.user.username,
 				'description' : post.description,
-				'schedule' : str(post.post_date)
+				'schedule' : post.schedule,
+				'post_date' : str(post.post_date)
 			})
 
 		return HttpResponse(
