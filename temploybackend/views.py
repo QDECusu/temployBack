@@ -231,16 +231,16 @@ class SearchView(ObjectMultipleModelAPIView):
 
 		querylist = []
 
-		unfiltered = User.objects.all()
+		unfiltered = Profile.objects.all()
 
-		users = unfiltered.filter(email = query)
-		users = users | unfiltered.filter(username__icontains=query)
-		users = users | unfiltered.filter(first_name__icontains = query)
+		users = unfiltered.filter(user__email = query)
+		users = users | unfiltered.filter(user__username__icontains=query)
+		users = users | unfiltered.filter(user__first_name__icontains = query)
 
 		if users.count() > 0:
-			querylist.append({'queryset': users, 'serializer_class': UserSerializer})
+			querylist.append({'queryset': users, 'serializer_class': ProfileSerializer})
 		else:
-			querylist.append({'queryset': User.objects.none(), 'serializer_class': UserSerializer})
+			querylist.append({'queryset': Profile.objects.none(), 'serializer_class': ProfileSerializer})
 
 		unfiltered = JobListing.objects.all()
 
@@ -274,7 +274,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		if self.request.method == 'PATCH':
 			return Application.objects.all()
 		else:
-			applications = Application.objects.filter(user=self.request.user)
+			applications = Application.objects.exclude(user=self.request.user)
 			return applications.filter(job_listing=self.request.query_params.get('jobPost', None))
 
 	def create(self, request):
@@ -313,7 +313,7 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		returnApplications = []
 		app = {}
 		app['id'] = application.id
-		app['job_post'] = application.job_listing.id 
+		app['job_post'] = application.job_listing.id
 		app['user'] = jData
 		returnApplications.append(app)
 
@@ -324,28 +324,29 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 		)
 
 	def list(self, request):
-		queryset = Application.objects.filter(user=self.request.user)
+		queryset = Application.objects.exclude(user=self.request.user)
 		applications = queryset.filter(job_listing=self.request.query_params.get('jobPost', None))
-		profile = Profile.objects.filter(user=self.request.user).first()
-		jData = {
-			'id': int(profile.id),
-			'username': str(profile.user.username),
-			'first_name': str(profile.user.first_name),
-			'last_name': str(profile.user.last_name),
-			'email': str(profile.user.email),
-			'Group': str(profile.user.groups),
-			'zipcode': profile.zipcode,
-			'rating':profile.rating,
-			'skills': profile.skills,
-			'short_description': profile.short_description
-		}
 		
 		returnApplications = []
 		for application in applications:
+			profile = Profile.objects.filter(user=application.user).first()
+
 			app = {}
 			app['id'] = application.id
 			app['job_post'] = application.job_listing.id 
-			app['user'] = jData
+			app['user'] = {
+				'id': int(profile.id),
+				'username': str(profile.user.username),
+				'first_name': str(profile.user.first_name),
+				'last_name': str(profile.user.last_name),
+				'email': str(profile.user.email),
+				'Group': str(profile.user.groups),
+				'zipcode': profile.zipcode,
+				'rating':profile.rating,
+				'skills': profile.skills,
+				'short_description': profile.short_description
+			}
+			app['accepted'] = application.accepted
 			returnApplications.append(app)
 
 		return HttpResponse(
@@ -356,9 +357,18 @@ class ApplicationView(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Upd
 
 	def partial_update(self, request, *args, **kwargs):
 		instance = self.get_object()
+		accepted=None
+
+		if request.data['accepted'] != None:
+			accepted = request.data['accepted']
+			if isinstance(accepted, str):
+				return HttpResponse(
+					json.dumps({"error" : "Please submit true or false as a bool in the body"}),
+					status=400,
+				)
 
 		if instance.job_listing.user == request.user:
-			instance.accepted = True
+			instance.accepted = accepted
 			instance.save()
 			return HttpResponse(
 				status=200
